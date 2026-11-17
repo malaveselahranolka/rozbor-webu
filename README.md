@@ -4,7 +4,7 @@ Lokální aplikace pro technický rozbor webů a AI asistentů na Windows a macO
 
 ## Stažení a spuštění
 
-Stáhni **Rozbor-webu.zip** v sekci [Releases](../../releases/latest) a rozbal ho. Běh aplikace a zpracování souborů probíhají na tvém počítači.
+Stáhni **Rozbor-webu.zip** v sekci [Releases](https://github.com/malaveselahranolka/rozbor-webu/releases/latest) a rozbal ho. Běh aplikace a zpracování souborů probíhají na tvém počítači.
 
 ### MacBook
 
@@ -69,6 +69,32 @@ macOS po prvním spuštění
 ~~~
 
 ZIP obsahuje report.md a report.json. Argument --file lze zadat vícekrát. --window 60 zapne minutový ruční záznam.
+
+## Lokální API
+
+Spusť webové rozhraní, případně použij **python -X utf8 app.py web --no-open**. Aplikace vypíše svoji adresu na **127.0.0.1**. Skript si ze stránky převezme token této relace a pošle JSON na **POST /analyze**.
+
+~~~python
+import json
+import re
+from urllib.request import Request, urlopen
+
+base = "http://127.0.0.1:12345"  # Nahraď adresou z terminálu.
+with urlopen(base, timeout=5) as response:
+    html = response.read().decode()
+token = re.search(r'<meta name="local-token" content="([^"]+)">', html).group(1)
+
+request = Request(
+    base + "/analyze",
+    data=json.dumps({"text": 'fetch("/api/models")'}).encode(),
+    headers={"Content-Type": "application/json", "X-Local-Token": token},
+)
+with urlopen(request, timeout=90) as response:
+    result = json.load(response)
+print(result["report"])
+~~~
+
+Kromě textu přijímá API **url** a **files**. Každý soubor má **name** a **data** s obsahem v Base64. Odpověď obsahuje **report** jako JSON a **markdown** jako text. Volba **archive** připojí Base64 ZIP, když analýza zachytí klientské soubory.
 
 [Export HAR v Chrome](https://developer.chrome.com/docs/devtools/network/reference/#save-all-network-requests-to-a-har-file) · [Podporované prohlížeče Playwrightu](https://playwright.dev/python/docs/browsers)
 
