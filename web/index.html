@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="local-token" content="__LOCAL_TOKEN__">
+  <title>Rozbor webu</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <h1>Rozbor webu</h1>
+      <p>Zmapuj volání API, funkce rozhraní a klientský kód. U každého nálezu uvidíš, ze kterého podkladu vychází.</p>
+    </header>
+
+    <div class="layout">
+      <form id="analyze" class="panel">
+        <h2>Podklady</h2>
+        <label for="url">Webová adresa</label>
+        <input id="url" type="text" inputmode="url" spellcheck="false" placeholder="https://app.example.com" maxlength="4096">
+
+        <label for="seconds">Záznam v prohlížeči</label>
+        <select id="seconds">
+          <option value="0">Načtení stránky</option>
+          <option value="30">Proklikání · 30 sekund</option>
+          <option value="60">Proklikání · 60 sekund</option>
+          <option value="120">Proklikání · 120 sekund</option>
+        </select>
+        <p id="mode-hint" class="field-note">Zachytí síť při načtení a dalších 5 sekund.</p>
+
+        <label id="drop-zone" class="drop-zone">
+          <span>Přetáhni nebo vyber soubory</span>
+          <span class="field-note">HAR, screenshoty, HTML, JavaScript, JSON nebo text</span>
+          <input id="files" type="file" multiple
+            accept=".har,.json,.map,.html,.htm,.js,.mjs,.cjs,.jsx,.ts,.tsx,.css,.txt,.md,.csv,.log,.png,.jpg,.jpeg,.webp,.bmp,.gif,.tiff">
+        </label>
+        <ul id="file-list" class="file-list" aria-label="Přiložené soubory" hidden></ul>
+
+        <details class="text-entry">
+          <summary>Vložit poznámky nebo kód</summary>
+          <label for="notes" class="visually-hidden">Poznámky nebo kód</label>
+          <textarea id="notes" rows="5" maxlength="500000" spellcheck="false"></textarea>
+        </details>
+
+        <label class="checkbox">
+          <input id="archive" type="checkbox">
+          <span>Přibalit původní JavaScript a zdrojové mapy</span>
+        </label>
+        <div class="actions">
+          <button id="submit" class="primary" type="submit">Spustit analýzu</button>
+          <p id="status" role="status" class="field-note" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <aside class="panel guide">
+        <h2>Záznam konkrétní funkce</h2>
+        <ol>
+          <li>V Chrome nebo Edge otevři vývojářské nástroje přes <kbd>F12</kbd> a vyber kartu <strong>Network</strong>.</li>
+          <li>Zapni <strong>Preserve log</strong> a proveď akci, kterou chceš rozebrat.</li>
+          <li>Vyber <strong>Export HAR (sanitized)</strong> a přilož vzniklý soubor.</li>
+        </ol>
+        <p class="field-note">Práce s HAR a obrázky probíhá na tomto počítači.</p>
+      </aside>
+    </div>
+
+    <section id="report" aria-label="Výsledek analýzy" hidden></section>
+  </main>
+</body>
+</html>
